@@ -29,6 +29,9 @@ java -cp .:lib/hamcrest-core-1.3.jar:lib/junit-4.13.2.jar org.junit.runner.JUnit
 if [[ $? -eq 1 ]]
 then
     echo "At least one fail found - Grade: FAIL"
+else
+    echo "All tests passed - Grade: PASS!"
 fi
-
 grep "Tests run: *" testResults.txt
+
+rm ListExamples.java testResults.txt ListExamples.class 
