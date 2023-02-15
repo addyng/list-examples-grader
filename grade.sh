@@ -4,7 +4,9 @@ rm -rf student-submission
 git clone $1 student-submission
 echo 'Finished cloning'
 
-if [[-f ListExamples.java]]
+cp student-submission/ListExamples.java ./
+
+if [[ -f ListExamples.java ]]
 then
     echo "ListExamples found"
 else
@@ -12,6 +14,21 @@ else
     exit 1
 fi
 
-cp ../ListExamples.java ./
+javac -cp .:lib/hamcrest-core-1.3.jar:lib/junit-4.13.2.jar *.java
 
-javac -cp .:lib/hamcrest-core-1.3.jar:lib/junit-4.13.2.jar *.java 2> compileError.txt
+if [[ $? -eq 0 ]]
+then
+    echo "Files Compiles"
+else
+    echo "Files don't compile"
+    exit 1
+fi
+
+java -cp .:lib/hamcrest-core-1.3.jar:lib/junit-4.13.2.jar org.junit.runner.JUnitCore TestListExamples > testResults.txt
+
+if [[ $? -eq 1 ]]
+then
+    echo "At least one fail found - Grade: FAIL"
+fi
+
+grep "Tests run: *" testResults.txt
